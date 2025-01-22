@@ -9,7 +9,7 @@ const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
   apiVersion: '2023-01-01',
-  token:'skjytw1NDYrTX5pvHq7t8eV0rYhf0FGqVoXDnqYM5QrjyWEhMRxjBTD87ofw7nxfXtwD1eLUUf5VZrV7Fcy7l0Rv2bnwCBjFucMRtvcB0bSG1e6YUOFjN3IAUmOxYs0yXmJ4IJUmTgaN7mvBl3ocY6eBVG0Msb4oj6IS2bpyGzBYdQgdzKyw',
+  token:"skjytw1NDYrTX5pvHq7t8eV0rYhf0FGqVoXDnqYM5QrjyWEhMRxjBTD87ofw7nxfXtwD1eLUUf5VZrV7Fcy7l0Rv2bnwCBjFucMRtvcB0bSG1e6YUOFjN3IAUmOxYs0yXmJ4IJUmTgaN7mvBl3ocY6eBVG0Msb4oj6IS2bpyGzBYdQgdzKyw",
   useCdn: false,
 });
 

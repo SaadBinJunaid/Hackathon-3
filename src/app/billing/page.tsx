@@ -5,7 +5,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { storeOrder } from "../api/storeOrder/route";
+import { storeOrder } from "@/sanity/lib/storeOrder";
+
 
 
 
