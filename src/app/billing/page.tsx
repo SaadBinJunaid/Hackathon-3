@@ -1,16 +1,9 @@
-// pages/billingPage.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { storeOrder } from "@/sanity/lib/storeOrder";
-
-
-
-
- // Import storeOrder function
 
 // Define the types for the cart items
 interface CartItem {
@@ -46,6 +39,7 @@ export default function BillingDetails() {
     phoneNumber: "",
   });
 
+  // Fetch cart items from local storage
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -74,7 +68,9 @@ export default function BillingDetails() {
     cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -101,13 +97,7 @@ export default function BillingDetails() {
     }
 
     const orderData = {
-      name: formData.name,
-      email: formData.email,
-      address: formData.address,
-      city: formData.city,
-      postalCode: formData.postalCode,
-      country: formData.country,
-      phoneNumber: formData.phoneNumber,
+      ...formData,
       cartItems: cartItems.map((item) => ({
         productId: item.id.toString(),
         quantity: item.quantity,
@@ -118,7 +108,7 @@ export default function BillingDetails() {
     setIsLoading(true);
 
     try {
-      const order = await storeOrder(orderData); // Call the storeOrder function
+      const order = await storeOrder(orderData); // Call storeOrder API function
 
       console.log("Order placed:", order);
 
@@ -137,7 +127,6 @@ export default function BillingDetails() {
 
       alert("Order placed successfully!");
     } catch (error: unknown) {
-      // Handle different types of errors more gracefully
       if (error instanceof Error) {
         console.error("Error placing order:", error.message);
         alert("An error occurred while placing the order: " + error.message);
@@ -161,164 +150,101 @@ export default function BillingDetails() {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
-        <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="container mx-auto px-6 py-10">
+        <form
+          onSubmit={handlePlaceOrder}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-50 p-8 rounded-lg shadow-md"
+        >
           {/* Billing Details Form */}
           <div>
-            <h2 className="text-3xl font-bold mb-8">Billing Details</h2>
+            <h2 className="text-3xl font-extrabold mb-8">Billing Details</h2>
             <div className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="Enter your Name"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="Enter your Email"
-                />
-              </div>
-              <div>
-                <label htmlFor="address" className="block text-sm font-medium">
-                  Address
-                </label>
-                <textarea
-                  id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="Enter your Address"
-                ></textarea>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="city" className="block text-sm font-medium">
-                    City
+              {[{
+                label: "Full Name", name: "name", type: "text", placeholder: "Enter your name"
+              }, {
+                label: "Email Address", name: "email", type: "email", placeholder: "Enter your email"
+              }, {
+                label: "Address", name: "address", type: "textarea", placeholder: "Enter your address"
+              }, {
+                label: "City", name: "city", type: "text", placeholder: "Enter your city"
+              }, {
+                label: "Postal Code", name: "postalCode", type: "text", placeholder: "Enter your postal code"
+              }, {
+                label: "Country", name: "country", type: "text", placeholder: "Enter your country"
+              }, {
+                label: "Phone Number", name: "phoneNumber", type: "tel", placeholder: "Enter your phone number"
+              }].map(({ label, name, type, placeholder }, index) => (
+                <div key={index}>
+                  <label htmlFor={name} className="block text-sm font-semibold">
+                    {label}
                   </label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
-                    placeholder="Enter your City Name"
-                  />
+                  {type === "textarea" ? (
+                    <textarea
+                      id={name}
+                      name={name}
+                      value={(formData as any)[name]}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full mt-2 border rounded-md px-4 py-3"
+                      placeholder={placeholder}
+                    />
+                  ) : (
+                    <input
+                      id={name}
+                      type={type}
+                      name={name}
+                      value={(formData as any)[name]}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full mt-2 border rounded-md px-4 py-3"
+                      placeholder={placeholder}
+                    />
+                  )}
                 </div>
-                <div>
-                  <label htmlFor="postalCode" className="block text-sm font-medium">
-                    Postal Code
-                  </label>
-                  <input
-                    type="text"
-                    id="postalCode"
-                    name="postalCode"
-                    value={formData.postalCode}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
-                    placeholder="Enter your postal code"
-                  />
-                </div>
-              </div>
-              <div>
-                <label htmlFor="country" className="block text-sm font-medium">
-                  Country
-                </label>
-                <input
-                  type="text"
-                  id="country"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="Enter your Country Name"
-                />
-              </div>
-
-              {/* Phone Number Field */}
-              <div>
-                <label htmlFor="phoneNumber" className="block text-sm font-medium">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="Enter your phone Number"
-                />
-              </div>
+              ))}
             </div>
           </div>
 
           {/* Order Summary */}
           <div>
-            <h2 className="text-3xl font-bold mb-8">Order Summary</h2>
-            <div className="space-y-4 border border-gray-200 rounded-md p-6 shadow-sm">
+            <h2 className="text-3xl font-extrabold mb-8">Order Summary</h2>
+            <div className="space-y-6 bg-white p-6 rounded-md shadow-sm">
               {cartItems.length > 0 ? (
                 cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center gap-4">
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded-md"
-                      />
-                      <div>
-                        <p className="font-medium">{item.name}</p>
-                        <p className="text-gray-500 text-sm">{item.description}</p>
-                        <p className="font-medium">{formatCurrency(item.price)}</p>
-                      </div>
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-center gap-4 bg-gray-100 p-4 rounded-md"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
+                    <div className="flex-1">
+                      <h4 className="font-semibold">{item.name}</h4>
+                      <p className="text-sm text-gray-600">{item.description}</p>
+                      <p className="text-sm font-medium">{formatCurrency(item.price)}</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center">
                       <button
-                        className="px-2 py-1 bg-gray-200 rounded"
-                        onClick={() =>
-                          updateQuantity(item.id, Math.max(1, item.quantity - 1))
-                        }
+                        type="button"
+                        className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300"
+                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                       >
                         -
                       </button>
-                      <p className="text-center">{item.quantity}</p>
+                      <span className="mx-3">{item.quantity}</span>
                       <button
-                        className="px-2 py-1 bg-gray-200 rounded"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
-                        }
+                        type="button"
+                        className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300"
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
                       >
                         +
                       </button>
                     </div>
-                    <p className="font-semibold">{formatCurrency(item.price * item.quantity)}</p>
                     <button
-                      className="text-red-500 text-sm"
+                      type="button"
+                      className="ml-4 text-red-500"
                       onClick={() => removeItem(item.id)}
                     >
                       Remove
@@ -326,17 +252,16 @@ export default function BillingDetails() {
                   </div>
                 ))
               ) : (
-                <p>No items in the cart.</p>
+                <p className="text-gray-600">No items in your cart.</p>
               )}
-            </div>
-            <div className="mt-4 flex justify-between">
-              <p className="font-semibold">Subtotal</p>
-              <p className="font-semibold">{formatCurrency(calculateSubtotal())}</p>
+              <div className="mt-4">
+                <p className="font-semibold">Subtotal: {formatCurrency(calculateSubtotal())}</p>
+              </div>
             </div>
             <button
               type="submit"
-              className="mt-8 w-full py-3 bg-black text-white rounded-md"
-              disabled={isLoading || cartItems.length === 0}
+              className="mt-6 w-full bg-[#2A254B] text-white px-6 py-3 rounded-md font-semibold"
+              disabled={isLoading}
             >
               {isLoading ? "Placing Order..." : "Place Order"}
             </button>
@@ -344,6 +269,6 @@ export default function BillingDetails() {
         </form>
       </div>
       <Footer />
-    </div>
-  );
+    </div>
+  );
 }
