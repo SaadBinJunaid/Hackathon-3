@@ -260,7 +260,7 @@ export default function BillingDetails() {
             </div>
             <button
               type="submit"
-              className="mt-6 w-full bg-[#2A254B] text-white px-6 py-3 rounded-md font-semibold"
+              className="mt-6 w-full bg-black text-white px-6 py-3 rounded-md font-semibold"
               disabled={isLoading}
             >
               {isLoading ? "Placing Order..." : "Place Order"}
