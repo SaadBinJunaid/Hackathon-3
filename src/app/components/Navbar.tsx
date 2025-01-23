@@ -76,6 +76,9 @@ export default function Navbar() {
               onClick={() => setIsSearchOpen(true)}
               className="h-6 w-6 cursor-pointer hover:text-gray-600"
             />
+             <Link href="/myaccount">
+              <UserIcon className="h-6 w-6 cursor-pointer hover:text-gray-600" />
+            </Link>
             <Link href="/checkout">
               <ShoppingCartIcon className="h-6 w-6 cursor-pointer hover:text-gray-600" />
             </Link>
