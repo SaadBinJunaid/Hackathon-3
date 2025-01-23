@@ -10,18 +10,41 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { products } from "../shop/page";
 
 interface CartItem {
   quantity: number;
 }
 
 export default function Navbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
-  const [cartItemCount, setCartItemCount] = useState<number>(0); // Dynamic cart item count
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [cartItemCount, setCartItemCount] = useState<number>(0); // State for cart count
 
-  // Update cart item count from localStorage
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("/api/products");
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+
+    // Update cart item count from localStorage
     const updateCartCount = () => {
       const storedCart = localStorage.getItem("cart");
       if (storedCart) {
@@ -39,7 +62,7 @@ export default function Navbar() {
     // Call the function initially to set the cart count
     updateCartCount();
 
-    // Use an interval to update the cart count every second
+    // Optionally update cart count every second (if items might be added dynamically)
     const interval = setInterval(updateCartCount, 1000);
 
     return () => {
@@ -47,9 +70,23 @@ export default function Navbar() {
     };
   }, []);
 
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      const results = products.filter((product: products) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredProducts(results);
+    } else {
+      setFilteredProducts([]);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
-    <div className="bg-gray-100">
-      <nav className="w-full bg-[#FBEBB5]">
+    <div className="bg-gray-100 m-0 p-0">
+      <nav className="w-full bg-[#FBEBB5] mb-0">
         <div className="container mx-auto flex justify-between items-center h-20 px-4 md:px-8">
           {/* Mobile Left */}
           <button
@@ -139,6 +176,80 @@ export default function Navbar() {
                   <Link href="/contact">Contact</Link>
                 </li>
               </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Search Modal */}
+        {isSearchOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Search Products</h2>
+                <XMarkIcon
+                  onClick={() => setIsSearchOpen(false)}
+                  className="h-6 w-6 cursor-pointer text-gray-600 hover:text-gray-800"
+                />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                placeholder="Search for products..."
+                className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                onClick={handleSearch}
+                className="w-full mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+              >
+                Search
+              </button>
+              <div className="mt-6 max-h-64 overflow-y-auto">
+                {filteredProducts.length > 0 ? (
+                  <ul className="space-y-4">
+                    {filteredProducts.map((product: products) => (
+                      <li
+                        key={product._id}
+                        className="flex items-start gap-4 border-b pb-4 last:border-b-0"
+                      >
+                        <img
+                          src={product.imagePath}
+                          alt={product.name}
+                          className="w-16 h-16 object-cover rounded-lg"
+                        />
+                        <div>
+                          <Link
+                            href={{
+                              pathname: `/product/${product._id}`,
+                              query: {
+                                name: product.name,
+                                price: product.price,
+                                image: product.imagePath,
+                                description: product.description,
+                              },
+                            }}
+                          >
+                            <h3 className="font-medium text-lg">
+                              {product.name}
+                            </h3>
+                          </Link>
+                          <p className="text-gray-500 text-sm">
+                            {product.description}
+                          </p>
+                          <p className="text-blue-500 font-semibold">
+                            £{product.price}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500 text-center mt-4">
+                    No products found.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         )}
