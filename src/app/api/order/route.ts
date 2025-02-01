@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID, // Set in Vercel dashboard
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,     // Set in Vercel dashboard
-  apiVersion: '2023-01-01',
+  apiVersion: '2025-01-18',
   token: process.env.NEXT_PUBLIC_SANITY_TOKEN,         // Set in Vercel dashboard
   useCdn: false, // Disable CDN for writes
 });
