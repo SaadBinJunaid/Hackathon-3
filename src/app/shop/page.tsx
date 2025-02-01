@@ -67,7 +67,7 @@ export default function ShopPage() {
           />
         </div>
 
-        {/* Filter Bar */}
+        
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 py-8 md:py-12">

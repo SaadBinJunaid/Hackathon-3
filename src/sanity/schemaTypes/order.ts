@@ -1,3 +1,4 @@
+
 // schemas/order.js
 export default {
   name: 'order',
@@ -53,6 +54,11 @@ export default {
               type: 'string',
             },
             {
+              name: 'productName',
+              title: 'Product Name',
+              type: 'string',
+            },
+            {
               name: 'quantity',
               title: 'Quantity',
               type: 'number',
@@ -65,6 +71,6 @@ export default {
       name: 'subtotal',
       title: 'Subtotal',
       type: 'number',
-    },
-  ],
+    },
+  ],
 };
