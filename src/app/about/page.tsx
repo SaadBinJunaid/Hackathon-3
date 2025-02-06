@@ -52,8 +52,8 @@ export default function AboutUs() {
           </p>
           <p className="text-lg leading-relaxed mb-4">
             At <span className="font-semibold">FurniStyle</span>, we believe that furniture should be more than just functional—it should
-            reflect your personality and values. That's why we partner with eco-conscious brands and skilled artisans
-            to bring you furniture that's both elegant and responsible.
+            reflect your personality and values. Thats why we partner with eco-conscious brands and skilled artisans
+            to bring you furniture thats both elegant and responsible.
           </p>
         </div>
         
