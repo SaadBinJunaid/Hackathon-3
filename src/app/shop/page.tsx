@@ -55,8 +55,7 @@ export default function ShopPage() {
     <>
       <div className="min-h-screen">
       <Navbar />
-      
-      <div className="w-full">
+      <div className="w-full pt-16 mt-16">
         {/* Banner Image */}
         <div className="relative w-full aspect-[16/3] sm:aspect-[16/4] md:aspect-[16/2]">
           <Image 

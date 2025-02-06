@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   UserIcon,
-  HeartIcon,
   ShoppingCartIcon,
   MagnifyingGlassIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { products } from "../shop/page";
+import { SignedOut, SignInButton, SignedIn, UserButton } from "@clerk/nextjs";
 
 interface CartItem {
   quantity: number;
@@ -85,7 +85,7 @@ export default function Navbar() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="bg-gray-100 m-0 p-0">
+    <div className="fixed top-0 left-0 w-full z-50 bg-gray-100 m-0 p-0">
       <nav className="w-full bg-[#FBEBB5] mb-0">
         <div className="container mx-auto flex justify-between items-center h-20 px-4 md:px-8">
           {/* Mobile Left */}
@@ -102,13 +102,16 @@ export default function Navbar() {
 
           {/* Mobile Right */}
           <div className="flex gap-4 md:hidden ml-auto">
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
             <MagnifyingGlassIcon
               onClick={() => setIsSearchOpen(true)}
               className="h-6 w-6 cursor-pointer hover:text-gray-600"
             />
-            <Link href="/myaccount">
-              <UserIcon className="h-6 w-6 cursor-pointer hover:text-gray-600" />
-            </Link>
             <Link href="/checkout" className="relative">
               <ShoppingCartIcon className="h-6 w-6 cursor-pointer hover:text-gray-600" />
               <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
@@ -131,18 +134,20 @@ export default function Navbar() {
             <li className="cursor-pointer hover:text-gray-600">
               <Link href="/contact">Contact</Link>
             </li>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
           </ul>
 
           {/* Desktop Icons */}
           <div className="hidden md:flex gap-8 items-center">
-            <Link href="/myaccount">
-              <UserIcon className="h-6 w-6 cursor-pointer hover:text-gray-600" />
-            </Link>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
             <MagnifyingGlassIcon
               onClick={() => setIsSearchOpen(true)}
               className="h-6 w-6 cursor-pointer hover:text-gray-600"
             />
-            <HeartIcon className="h-6 w-6 cursor-pointer hover:text-gray-600" />
             <Link href="/checkout" className="relative">
               <ShoppingCartIcon className="h-6 w-6 cursor-pointer hover:text-gray-600" />
               <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">

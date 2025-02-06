@@ -86,7 +86,7 @@ function Blogs() {
 
         <div className="text-center mt-12">
         <Link 
-              href="/about" 
+              href="/blog" 
               className="text-xl border-b-2 border-black pb-1 hover:opacity-75">
             View All Post
             </Link>

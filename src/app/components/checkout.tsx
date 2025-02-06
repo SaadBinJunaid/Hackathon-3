@@ -43,7 +43,7 @@ export default function Cart() {
   return (
     <>
       <Navbar />
-      <div className="relative w-full aspect-[16/3] sm:aspect-[16/4] md:aspect-[16/2]">
+      <div className="relative w-full aspect-[16/3] sm:aspect-[16/4] md:aspect-[16/2] pt-16 mt-16">
         <Image 
           src="/cart1.png"
           alt="cart Banner"
